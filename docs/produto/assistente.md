@@ -117,39 +117,100 @@ abrir um painel, ela deveria ser automática — essa é a fila de trabalho do p
 - Reclamação, insatisfação, cobrança, contrato.
 - Pedido novo → vira tarefa com prazo (§6) e ela devolve o prazo.
 
-## 5. O grupo
+## 5. Onde a conversa acontece
 
-A conversa acontece num **grupo separado do grupo comercial**, renomeado com o nome da
-assistente, com o sócio da Vértice dentro.
+**Decisão: usar o grupo que já existe com o cliente**, e não criar um novo. Fricção zero de
+onboarding — ninguém precisa aceitar convite, o cliente não ganha mais um grupo, e a assistente
+aparece exatamente onde a conversa já acontece. Grupo novo é uma barreira pequena que mata adoção
+grande.
 
-Por que grupo e não conversa direta:
+O custo dessa escolha é ruído: o grupo do cliente também é onde se fala de estratégia e de
+problema. Daí a regra:
 
-- Cabe **mais de uma pessoa do cliente** (dono + gestor de marketing + financeiro).
-- O **humano da Vértice está presente** e assume a conversa a qualquer momento, sem transferência.
-- O histórico é compartilhado: ninguém pergunta duas vezes.
-- O cliente **salva o número com o nome da assistente**, e a marca vira um contato na agenda dele.
+- **Grupo existente → níveis 0–2.** No máximo uma mensagem por dia.
+- **Nível 3–4 → grupo dedicado**, criado só pra quem pediu esse volume.
 
-O grupo comercial continua existindo pra conversa de estratégia. O da assistente é o canal de
-dado. Separar é o que permite o nível 3 existir sem poluir a conversa que importa.
+### Arquitetura de números: ouvido, boca e reserva
 
-### Restrição técnica que decide a arquitetura
+Todo o risco de banimento se concentra em quem **envia**. Então separa-se quem ouve de quem fala:
 
-A API oficial do WhatsApp (Cloud API) passou a suportar grupos, mas com limites que mudam o
-desenho — checar na documentação oficial antes de fechar escopo, o acesso a ela está bloqueado
-deste ambiente:
+| Papel | Onde | O que faz | Por que assim |
+|---|---|---|---|
+| **Ouvido** | número orquestrador, **admin** do grupo | recebe tudo, dispara os gatilhos, decide a resposta. **Nunca envia mensagem** | número que só lê tem perfil de comportamento baixíssimo — e, sendo admin, ele mesmo coloca um substituto no grupo quando uma boca cai |
+| **Boca** | número 2, via Z-API | *é* a assistente: manda notificação e resposta | todo o risco concentrado num número descartável |
+| **Reserva** | número 3, via Z-API, já dentro do grupo e calado | assume se o número 2 cair | já está no grupo e já está aquecido — troca em minutos, não em dias |
+
+```mermaid
+flowchart LR
+    subgraph grupo["Grupo do cliente — o que já existe"]
+        MSG["Mensagens"]
+    end
+
+    OUV["Ouvido<br/>admin · só lê"]
+    ORQ["Orquestrador<br/>Claude + agentes"]
+    BOCA["Boca — nº 2<br/>ativo"]
+    RES["Reserva — nº 3<br/>calado, aquecido"]
+
+    MSG --> OUV
+    OUV --> ORQ
+    ORQ --> BOCA
+    BOCA --> MSG
+    ORQ -.promove se cair.-> RES
+    RES -.assume.-> MSG
+    OUV -.admin: adiciona<br/>novo reserva.-> grupo
+```
+
+**Failover:** a boca cai → o reserva é promovido na config → o ouvido, como admin, adiciona um
+número novo ao grupo como próximo reserva → a assistente se reapresenta. Sem depender de ninguém
+do lado do cliente. Ser admin não é detalhe: é justamente o que torna a troca automática.
+
+Os três números atendem **todos os grupos**, não um conjunto por cliente. O custo é fixo, não
+escala com a carteira.
+
+### O que essa arquitetura resolve — e o que ela não resolve
+
+Resolve bem: perda total de canal (o ouvido sobrevive), tempo de recuperação (reserva já dentro
+do grupo), e dependência do cliente pra restabelecer.
+
+O que continua de pé, e precisa estar escrito pra não virar surpresa:
+
+1. **Conectar cliente não-oficial já é violação de termos, independente de enviar.** O risco do
+   ouvido é *menor*, não zero — a detecção é do cliente conectado, não do volume enviado. Logo o
+   ouvido também precisa de plano B, e o plano B é a API oficial.
+2. **A identidade não pode morar no contato salvo.** Se o cliente salvou "Vera" com o número 2 e
+   ele cai, o contato dele aponta pra um número morto. Então a identidade mora no **nome do grupo**
+   e na **assinatura de toda mensagem** (`— Vera · Vértice`). Salvar o contato é bônus, não
+   requisito.
+3. **Só uma boca fala.** Com dois números capazes de enviar, é preciso trava explícita: envia
+   quem está marcado como ativo na config, e o reserva nunca envia sem promoção. Resposta em
+   duplicata destrói a ilusão de "uma assistente" em uma mensagem.
+4. **Número novo precisa de aquecimento.** Criar o reserva no dia da queda é o padrão clássico de
+   ban em cascata. O reserva tem que existir antes, com tráfego baixo e constante.
+5. **Privacidade.** O ouvido lê o grupo inteiro, inclusive conversa que não é com a assistente.
+   Regra: processar só o que é dirigido a ela, não persistir o resto, e **avisar o cliente que
+   existe um assistente no grupo** — LGPD e educação básica apontam pro mesmo lugar.
+6. **A conta de anúncio não pode depender disso.** Nenhum gatilho que gaste dinheiro sai por esse
+   canal. Já é regra do §4, mas aqui ela também vira proteção operacional.
+
+### API oficial no radar
+
+Vale manter como caminho de contingência e de escala, não como plano descartado. Limites que
+mudam o desenho — confirmar na documentação oficial antes de fechar escopo, o acesso a
+`developers.facebook.com` está bloqueado deste ambiente:
 
 | Limite | Impacto |
 |---|---|
-| Exige **Official Business Account** (conta verificada) | Vira pré-requisito comercial da Vértice, não do cliente |
-| **8 participantes** por grupo (a assistente ocupa 1) | Sobram 7 — folgado pra PME, apertado pra cliente com time grande |
-| **1 número de negócio por grupo** | Não dá pra ter a assistente e outro bot no mesmo grupo |
-| Sem botão / lista interativa em grupo | Escolha de nível e CSAT viram **comando de texto** no grupo, ou botão na conversa 1:1 |
-| Sem view-once, chamada, carrinho | Irrelevante pro caso de uso |
+| Exige **Official Business Account** (verificada) | Pré-requisito comercial da Vértice, não do cliente |
+| **8 participantes** por grupo (a assistente ocupa 1) | Sobram 7 — cabe PME, aperta cliente com time grande |
+| **1 número de negócio por grupo** | Não convive com outro bot no mesmo grupo |
+| Grupo é criado **pelo** número de negócio | **Não dá pra entrar no grupo que já existe** — é o motivo de o caminho oficial não servir pro cenário principal |
+| Sem botão / lista interativa em grupo | Escolha de nível e CSAT viram comando de texto, ou botão no 1:1 |
+| Preço por mensagem | Custo varia com o nível de conforto escolhido |
 
-A alternativa não-oficial (bibliotecas tipo Baileys, com número pessoal) resolve o limite de
-participantes, mas roda contra os termos do WhatsApp e o número pode ser banido — perder o canal
-de 14 clientes de uma vez. **Recomendação: caminho oficial**, e o limite de 7 pessoas do cliente
-vira restrição de escopo declarada, não um problema a contornar.
+Ou seja: **oficial e grupo existente são incompatíveis.** O caminho oficial serve pro grupo
+dedicado de nível 3–4 (que a gente cria mesmo, e cabe em 7 pessoas) e pra contingência se a via
+Z-API ficar insustentável. Gatilhos pra migrar: ban recorrente mesmo com o esquema de números,
+cliente que exige conta verificada, ou a conversa 1:1 virar o canal principal.
 
 ### Nome
 
@@ -236,7 +297,10 @@ O `config.json` de cada cliente ganha um bloco:
 | Divergência com o painel do cliente | Parece erro nosso e vira reunião | Sempre declarar fonte e recorte; ter resposta pronta pra atribuição |
 | Notificação vira ruído e o cliente muta o grupo | Perde o canal justamente quando precisa avisar de crítico | Níveis, janela, silêncio em dia parado; alerta interno se o cliente parar de ler |
 | Cliente ficar mais ansioso, não menos | Dado diário sem contexto amplifica variação normal | Comparar sempre com a média do período, não com o dia anterior isolado |
-| Banimento do número | Perde 14 clientes num dia | Caminho oficial (§5), nunca biblioteca não-oficial |
+| Banimento do número que envia | Canal muda no meio da relação | Ouvido/boca/reserva (§5): o ouvido nunca envia, o reserva já está no grupo e aquecido |
+| Banimento do ouvido | Aí sim perde o canal de todos os grupos de uma vez | Conta separada, comportamento só de leitura, e a API oficial como plano B declarado |
+| Assistente responder em duplicata | Quebra a ilusão de "uma assistente" numa mensagem | Só o número marcado como ativo envia; reserva nunca envia sem promoção |
+| Cliente perder a assistente na troca de número | Ele continua mandando mensagem pro número morto | Identidade no nome do grupo e na assinatura, não no contato salvo |
 | Virar suporte 24/7 informal | O humano vira refém do grupo | Deixar explícito no onboarding o que é instantâneo e o que tem SLA |
 
 ## 9. Fases
@@ -252,9 +316,9 @@ O `config.json` de cada cliente ganha um bloco:
 ## 10. Decisões em aberto
 
 1. **Nome da assistente** — Vera / Vic / Nina / outro.
-2. **Um número pra todos os clientes ou um por cliente?** Um número compartilhado é mais simples
-   e concentra a verificação; um por cliente isola melhor e permite white-label. Recomendação:
-   **um número da Vértice pra todos**, com o grupo dando o isolamento.
+2. **Quantos reservas e quem aquece?** Um reserva cobre a primeira queda; a segunda, dentro da
+   mesma semana, já pega a operação descoberta. Vale definir a rotina de aquecimento e quem
+   monitora se o reserva ainda está vivo — número parado meses também é suspeito.
 3. **A assistente se apresenta como IA?** Recomendação: **sim, no primeiro contato** — e depois
    não repete. Cliente que descobre sozinho perde a confiança nos números junto.
 4. **Fonte de faturamento** — plataforma de anúncio ou e-commerce? Precisa ser uma só por cliente,

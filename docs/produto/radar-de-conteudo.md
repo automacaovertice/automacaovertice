@@ -59,26 +59,54 @@ E fica o registro do que **não** vamos fazer: scraping de Instagram pra suprir 
 Viola os termos, arrisca o acesso das contas dos clientes e é caro de manter contra mudança de
 layout. O limite da API é o limite do produto.
 
+### Não existe leaderboard público da plataforma
+
+A pergunta natural é: não tem um lugar onde dá pra consultar os melhores posts do Instagram por
+métrica? **Não tem, e não é descuido — é decisão da Meta.** O que existe:
+
+| Fonte | O que dá | O que não dá |
+|---|---|---|
+| **Meta Content Library** (sucessor do CrowdTangle, que foi desligado em ago/2024) | Conteúdo público de Facebook e Instagram com contagens de engajamento | Acesso por candidatura e triagem — pesquisador acadêmico ou newsroom sem fins lucrativos. Agência não entra. Exportação automatizada não é permitida |
+| **Estudos de benchmark** (Socialinsider, Rival IQ, Metricool) | Medianas de engajamento por setor e por formato — Instagram rodando em torno de 0,3%–0,5% por post, com carrossel e Reels disputando a ponta | Post individual. É agregado, publicado uma ou duas vezes por ano |
+| **Painel profissional do Instagram** | Áudio em alta, sugestões de tendência dentro do app | Nada consultável por API, nada comparável entre contas |
+| **Raspadores de terceiros** (Apify e afins) | Quase tudo | Roda contra os termos e coloca em risco o acesso das contas dos clientes. Fora de escopo |
+
+O uso certo dos benchmarks não é procurar padrão neles — é **denominador**. Eles respondem "0,7%
+de engajamento é bom?", e essa é exatamente a frase que falta num relatório pro cliente. Descobrir
+padrão continua sendo trabalho de dado próprio.
+
 ## 3. A hipótese que vale testar
 
-O usuário levantou algo que faz sentido de plataforma: **repost é feature nova, e plataforma
-costuma empurrar o que ela acabou de lançar.** Se o algoritmo dá alcance extra pra conteúdo
-repostado, então "fazer conteúdo repostável" é uma vantagem temporária — e temporária é
-exatamente quando vale correr.
+A intuição original — **repost é feature nova, e plataforma empurra o que acabou de lançar** —
+está certa no formato, mas a própria Meta já entregou uma pista mais forte e mais barata de
+testar.
 
-Traduzido em hipótese testável:
+Adam Mosseri declarou publicamente quais são os sinais que mais pesam no ranqueamento:
+**tempo assistido**, **likes por alcance** e **sends por alcance** — sends sendo o
+compartilhamento por DM. E a distinção entre eles é o que interessa aqui: like por alcance pesa
+pra alcançar quem já segue; **send por alcance é o que empurra pra quem não segue**.
 
-> **H1** — entre posts da mesma conta, taxa de repost por alcance prevê alcance futuro melhor do
-> que taxa de like por alcance.
+Isso muda a ordem das apostas:
 
-Se H1 se confirmar, a consequência prática é forte: parar de otimizar criativo pra like e começar
-a otimizar pra "alguém colocar isso no próprio perfil" — que é um conteúdo bem diferente
-(declaração, opinião, dado surpreendente, meme de nicho — coisas que dizem algo sobre quem
-reposta).
+> **H1 (principal)** — entre posts da mesma conta, `shares/reach` prevê alcance futuro melhor do
+> que `likes/reach`. É a hipótese que a própria plataforma afirma; o valor de testar é confirmar
+> que vale **para este nicho**, e descobrir *qual atributo de criativo* produz send.
+>
+> **H2 (a aposta)** — repost público pro perfil, métrica nova e separada de send, carrega o bônus
+> de alcance que plataforma costuma dar pra feature recém-lançada. Se for verdade, é vantagem
+> temporária — e temporária é exatamente quando vale correr.
 
-Hipóteses irmãs, mesmo método: **H2** save prevê retorno de audiência (conteúdo de utilidade) ·
-**H3** comentário prevê alcance mas não conversão · **H4** o padrão é específico do nicho e não
-transfere entre clientes.
+A consequência prática, se qualquer uma se sustentar, é a mesma e é grande: **parar de otimizar
+criativo pra like e começar a otimizar pra "alguém mandar isso pra outra pessoa"** — que é
+conteúdo bem diferente. Like é conteúdo bonito; send é conteúdo que diz algo sobre quem manda
+(opinião, dado surpreendente, piada de nicho, utilidade que serve pra alguém específico).
+
+Hipóteses irmãs, mesmo método: **H3** save prevê retorno de audiência (utilidade) · **H4**
+comentário prevê alcance mas não conversão · **H5** o padrão é específico do nicho e não transfere
+entre clientes.
+
+Nota de método que vem de graça com isso: o vocabulário certo é **por alcance**, não absoluto —
+a própria plataforma raciocina assim. Reforça o passo 2 do §4.
 
 ## 4. Método
 
@@ -94,7 +122,9 @@ flowchart LR
 
 **1. Coleta.** Histórico de mídia + insights das contas do cliente, salvo em base própria. Insight
 de Instagram tem janela de retenção — quem não coleta, perde. Começar a coletar é a tarefa mais
-urgente do projeto, mesmo antes de existir modelo.
+urgente do projeto, mesmo antes de existir modelo. Prioridade de campos, na ordem do que a
+plataforma diz pesar: **tempo assistido** (Reels), `shares`, `likes`, `saved`, contagem de
+repost — todos junto de `reach`, que é o denominador de tudo.
 
 **2. Normalização.** Nada de métrica absoluta. Tudo vira taxa sobre alcance (`saved/reach`,
 `repost/reach`), e comparado **dentro da mesma conta e do mesmo período** — conta cresce, alcance
@@ -163,6 +193,9 @@ Não é modelar. É **começar a guardar**:
    pautar" — com like e comentário apenas, provavelmente não paga o esforço.
 4. **TikTok entra?** A pergunta original falava em "outras redes"; TikTok tem API própria e outro
    escopo de trabalho.
+5. **Assinar uma base de benchmark?** Socialinsider ou Rival IQ dão a mediana do setor — o
+   denominador que falta pra dizer "seu 0,7% é bom". Custo baixo, entra direto no relatório e na
+   Assistente. Decisão de compra, não de engenharia.
 
 ---
 
@@ -174,3 +207,9 @@ Não é modelar. É **começar a guardar**:
 - [Meta rolls out new Instagram API features for branded content and analytics — Social Samosa](https://www.socialsamosa.com/news-2/meta-instagram-api-features-branded-content-analytics-11760299)
 - [Instagram Business Discovery API: What Can You Actually Get? — KeyAPI](https://www.keyapi.ai/blog/instagram-business-discovery-api/)
 - [How Instagram's Updated Marketing API Metrics Work — Storrito](https://storrito.com/resources/how-instagrams-updated-marketing-api-metrics-work/)
+- [Instagram "Sends per Reach" Playbook — Influencer Marketing Hub](https://influencermarketinghub.com/instagram-sends-per-reach-playbook/)
+- [The 3 Most Important Instagram Metrics for Reach (Mosseri) — Torro](https://torro.io/blog/3-most-important-instagram-metrics-for-reach)
+- [CrowdTangle — Meta Transparency Center](https://transparency.meta.com/researchtools/other-data-catalogue/crowdtangle/)
+- [A First Look at Meta's New Content Library and Content Library API — Social Media Lab](https://socialmedialab.ca/web/2024/03/25/a-first-look-at-metas-new-content-library-and-content-library-api/)
+- [Meta Is Getting Rid of CrowdTangle — Columbia Journalism Review](https://www.cjr.org/tow_center/meta-is-getting-rid-of-crowdtangle.php)
+- [2026 Instagram Organic Engagement Benchmarks — Socialinsider](https://www.socialinsider.io/social-media-benchmarks/instagram)
