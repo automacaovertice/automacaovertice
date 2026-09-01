@@ -94,7 +94,6 @@ Cada uma nasceu de um erro que custou dinheiro. A rotina é a cicatriz.
 | Proposta | O que é |
 |---|---|
 | **[A Assistente](docs/produto/assistente.md)** | Um WhatsApp com nome próprio que conta todo dia o que está acontecendo na conta do cliente — e responde na hora o que a gente já sabe. O cliente escolhe o nível de detalhe |
-| **[Radar de conteúdo](docs/produto/radar-de-conteudo.md)** | Achar o padrão do que performa (save, repost, share) nas contas do cliente e transformar em pauta de criativo |
 | **[Diagnóstico e implantação](docs/produto/diagnostico-e-implantacao.md)** | Cardápio de módulos, pré-requisitos declarados, SLA por classe de pedido e fila visível pro cliente |
 
 ## Princípios de engenharia

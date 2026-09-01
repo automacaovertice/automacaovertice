@@ -1,10 +1,33 @@
 # Radar de conteúdo
 
-**Status:** proposta · **Origem:** conversa de 2026-09-01 · **Primeiro caso:** Casa dos Craques
-· **Se conecta com:** [A Assistente](./assistente.md)
+**Status: arquivada** em 2026-09-01, no mesmo dia em que foi escrita · **Origem:** conversa de
+2026-09-01 · **Se conectava com:** [A Assistente](../produto/assistente.md)
 
 > Pegar o que já deu certo — nas contas do cliente e no que é público — achar o padrão por trás,
 > e transformar isso em briefing de criativo.
+
+## Por que está arquivada
+
+Duas razões, nesta ordem:
+
+1. **Não existe leaderboard público** (§2 abaixo). O CrowdTangle morreu, o sucessor é fechado
+   pra pesquisa acadêmica, e sem isso a ideia perde a parte que a tornava barata: olhar o que
+   já é sucesso e copiar o padrão. Sobra modelar dado próprio, que é trabalho de meses.
+2. **Caçar post viral não é o objetivo da Vértice.** A casa vive de performance paga, não de
+   alcance orgânico. Mesmo que a modelagem funcionasse, ela entrega pauta de conteúdo — produto
+   de outra agência.
+
+**O que sobreviveu e migrou:** a única parte com retorno imediato é comprar uma base de benchmark
+(Socialinsider ou Rival IQ) pra ter a mediana do setor e poder dizer "seu 0,7% é bom". Isso é
+decisão de compra, não de engenharia, e virou item no
+[cardápio de módulos](../produto/diagnostico-e-implantacao.md).
+
+**O que faria isso voltar à mesa:** um cliente pagando especificamente por estratégia de conteúdo
+orgânico, ou a Meta reabrindo acesso amplo a dado público de plataforma. Nenhum dos dois está no
+horizonte.
+
+O resto do documento fica como está — a pesquisa de API abaixo é válida e economiza a redescoberta
+se o assunto voltar.
 
 ---
 

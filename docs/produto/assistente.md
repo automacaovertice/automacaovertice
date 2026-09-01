@@ -1,6 +1,8 @@
 # A Assistente
 
-**Status:** proposta · **Origem:** conversa de 2026-09-01 · **Depende de:** [Diagnóstico e implantação](./diagnostico-e-implantacao.md)
+**Status:** proposta · **Origem:** conversa de 2026-09-01 · **Backlog:**
+[cards de implantação](./assistente-cards.md) · **Depende de:**
+[Diagnóstico e implantação](./diagnostico-e-implantacao.md)
 
 > Camada de atendimento da Vértice: um número de WhatsApp com nome próprio que conta pro
 > cliente, todo dia, o que está acontecendo na conta dele — e responde na hora o que a gente
@@ -78,8 +80,9 @@ Ajustes independentes do nível, porque nível errado geralmente é **horário**
 
 O nível é **descoberto, não perguntado no vácuo**. Ninguém sabe responder "você quer 3 ou 5
 mensagens por dia?" antes de ver como elas são. Então: entra todo mundo no **nível 2**, e a
-assistente oferece o ajuste no dia 7 e no dia 30 — "quer mais detalhe? menos?" — com dois botões.
-Mudar de nível é uma frase: *"me manda menos"* / *"quero acompanhar o dia todo"*.
+assistente oferece o ajuste no dia 7 e no dia 30 — "quer mais detalhe? menos?". Como o canal é o
+grupo (§5), não há botão: a resposta é texto livre, e mudar de nível é uma frase — *"me manda
+menos"*, *"quero acompanhar o dia todo"*.
 
 ## 4. O que ela responde na hora
 
@@ -234,7 +237,45 @@ da assistente, o comportamento é:
 
 Ver a fila é o que transforma "vocês não fizeram" em "eu escolhi outra coisa primeiro".
 
-## 7. Arquitetura
+## 7. Padrão de mensagem
+
+O que separa "assistente" de "bot" não é o modelo por trás — é a mensagem. Regras fechadas:
+
+- **Uma mensagem por gatilho.** Três eventos ao mesmo tempo viram uma mensagem com três linhas,
+  nunca três mensagens. Bom dia e número vão juntos.
+- **Assinatura sempre**, porque a identidade não mora no contato salvo (§5).
+- **Todo número com recorte:** valor · conta · período · hora da coleta.
+- **Comparação com a média do período, nunca com o dia anterior isolado.** Terça contra segunda
+  é ruído, e ruído diário fabrica ansiedade — o oposto do produto.
+- **Má notícia vem com o que já foi feito.** "Conta travada" sozinho gera pânico às 8h da manhã.
+- **Sem jargão** — nada de CPM, frequência ou CBO, a menos que o cliente use primeiro.
+- **Sem emoji de comemoração em resultado ruim.** No máximo um marcador de status.
+- **Nunca pedir satisfação depois de má notícia** (§2).
+
+Modelos:
+
+**Nível 1 — tranquilidade**
+> Bom dia! Tudo rodando por aqui: 3 contas ativas, nenhum alerta.
+> — Vera · Vértice
+
+**Nível 2 — diário com números**
+> Bom dia! Tudo rodando, nenhum alerta.
+> Ontem (31/08): investimento R$ 1.240 · faturamento R$ 8.900 · ROAS 7,2
+> Acima da média das últimas 4 terças (ROAS 6,1).
+> *Meta + Google · dados coletados 09:12*
+> — Vera · Vértice
+
+**Alerta crítico — em qualquer nível, inclusive o 0**
+> Atenção: a conta Meta travou por falha no pagamento e parou de entregar às 04:20.
+> O financeiro já foi acionado e o Rafael está acompanhando. Assim que voltar, te aviso aqui.
+> — Vera · Vértice
+
+**Troca de número**
+> Oi! Mudei de número — sou eu, a Vera, do mesmo grupo. Se você tinha me salvo, vale
+> atualizar o contato. Nada mais muda.
+> — Vera · Vértice
+
+## 8. Arquitetura
 
 ```mermaid
 flowchart LR
@@ -288,7 +329,7 @@ O `config.json` de cada cliente ganha um bloco:
 }
 ```
 
-## 8. Riscos
+## 9. Riscos
 
 | Risco | Por que dói | Mitigação |
 |---|---|---|
@@ -303,7 +344,7 @@ O `config.json` de cada cliente ganha um bloco:
 | Cliente perder a assistente na troca de número | Ele continua mandando mensagem pro número morto | Identidade no nome do grupo e na assinatura, não no contato salvo |
 | Virar suporte 24/7 informal | O humano vira refém do grupo | Deixar explícito no onboarding o que é instantâneo e o que tem SLA |
 
-## 9. Fases
+## 10. Fases
 
 | Fase | Entrega | Como sabemos que funcionou |
 |---|---|---|
@@ -313,7 +354,7 @@ O `config.json` de cada cliente ganha um bloco:
 | **3 — Dia inteiro** | Níveis 3–4, eventos operacionais, ajuste de nível por texto | Ninguém desce de nível por irritação |
 | **4 — Fila** | Status de pedido, SLA e priorização dentro do grupo | Cai o nº de "e aquilo que eu pedi?" |
 
-## 10. Decisões em aberto
+## 11. Decisões em aberto
 
 1. **Nome da assistente** — Vera / Vic / Nina / outro.
 2. **Quantos reservas e quem aquece?** Um reserva cobre a primeira queda; a segunda, dentro da

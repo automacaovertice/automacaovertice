@@ -1,7 +1,7 @@
 # Diagnóstico e implantação
 
 **Status:** proposta · **Origem:** conversa de 2026-09-01 · **Sustenta:**
-[A Assistente](./assistente.md) · [Radar de conteúdo](./radar-de-conteudo.md)
+[A Assistente](./assistente.md) · [Cards](./assistente-cards.md)
 
 > Como a gente vende e entrega automação sem virar refém de pedido infinito: cardápio de módulos,
 > pré-requisitos declarados, fila visível e prazo que vale.
@@ -71,7 +71,7 @@ depende, quanto custa implantar.
 | **Assistente — pergunta livre** | Catálogo de consultas 24/7 | Acesso de leitura às contas |
 | **Faturamento no relatório** | Receita junto do investimento | Integração com o e-commerce/CRM |
 | **Monitor de URL e criativo** | Alerta de link morto, produto esgotado | Nada — já roda |
-| **Radar de conteúdo** | Padrão de post + pauta semanal | Conta profissional de Instagram conectada |
+| **Benchmark de setor** | A mediana do setor junto do número do cliente — "seu 0,7% é bom" | Nenhum do lado do cliente; a Vértice assina a base |
 | **Transcrição de reunião** | Resumo e decisões no repositório e no Slack | Assinatura da ferramenta de transcrição |
 | **Dashboard** | Painel próprio, dado do dia | Nada — já roda |
 

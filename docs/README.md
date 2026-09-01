@@ -7,11 +7,19 @@ está fechado vira rotina no código.
 | Documento | Em uma linha | Status |
 |---|---|---|
 | [A Assistente](./produto/assistente.md) | Um WhatsApp com nome próprio que conta o que está acontecendo na conta do cliente e responde na hora o que a gente já sabe | proposta |
-| [Radar de conteúdo](./produto/radar-de-conteudo.md) | Achar o padrão do que performa (save, repost, share) e transformar em pauta de criativo | proposta |
+| [Assistente — cards](./produto/assistente-cards.md) | O backlog dela em tamanho de card: entrega, critério de pronto e dependência | pronto pra fila |
 | [Diagnóstico e implantação](./produto/diagnostico-e-implantacao.md) | Cardápio de módulos, pré-requisitos, SLA e fila visível — como vender e entregar sem virar trabalho infinito | proposta |
 
-Os três se encaixam: o **diagnóstico** define o que cada cliente pode ter, a **Assistente** é o
-canal por onde tudo chega, e o **radar** é um dos conteúdos que ela entrega.
+O **diagnóstico** define o que cada cliente pode ter; a **Assistente** é o canal por onde tudo
+chega.
+
+## Arquivo
+
+| Documento | Por que saiu |
+|---|---|
+| [Radar de conteúdo](./arquivo/radar-de-conteudo.md) | Não existe leaderboard público de Instagram desde o fim do CrowdTangle, e caçar post viral não é o objetivo da casa. A pesquisa de API continua válida se o assunto voltar |
+
+Ideia arquivada não é ideia errada — é ideia com o gatilho de volta escrito no topo do documento.
 
 ## Como ler
 
