@@ -1,0 +1,389 @@
+<title>Cenários da Mesa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+  :root {
+    --ground:  #F4F6F8;
+    --surface: #FFFFFF;
+    --sunken:  #EAEEF2;
+    --ink:     #10161F;
+    --muted:   #59636F;
+    --faint:   #838D99;
+    --rule:    #DBE0E6;
+    --rule-2:  #BFC8D2;
+    --vertice: #1F6FEB;
+    --multi:   #7C4DD1;
+    --flag:    #A8420C;
+    --flag-bg: #FAEFE8;
+    --ok:      #14713F;
+    --ok-bg:   #EAF3ED;
+    --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --f-body: "Source Serif 4", Georgia, serif;
+    --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --pad: clamp(18px, 4.5vw, 40px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0C1017; --surface:#141A23; --sunken:#1B222C; --ink:#E9EDF2;
+      --muted:#9EA9B5; --faint:#717C8A; --rule:#262E39; --rule-2:#3A4552;
+      --vertice:#5B9BFF; --multi:#AE8CF0; --flag:#F0864A; --flag-bg:#241812;
+      --ok:#4FBF85; --ok-bg:#12241A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0C1017; --surface:#141A23; --sunken:#1B222C; --ink:#E9EDF2;
+    --muted:#9EA9B5; --faint:#717C8A; --rule:#262E39; --rule-2:#3A4552;
+    --vertice:#5B9BFF; --multi:#AE8CF0; --flag:#F0864A; --flag-bg:#241812;
+    --ok:#4FBF85; --ok-bg:#12241A;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--ground); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 var(--pad); }
+
+  header { padding: clamp(34px, 6vw, 60px) 0 clamp(24px, 4vw, 36px); border-bottom: 1px solid var(--rule); }
+  .marks { font-family: var(--f-display); font-weight: 700; font-size: 14px; margin-bottom: 16px; }
+  .marks .v { color: var(--vertice); } .marks .m { color: var(--multi); }
+  .marks .x { color: var(--faint); font-family: var(--f-mono); }
+  h1 { font-family: var(--f-display); font-size: clamp(26px, 5vw, 42px); line-height: 1.06; letter-spacing: -0.03em; font-weight: 700; margin: 0 0 14px; }
+  .sub { color: var(--muted); max-width: 56ch; margin: 0; font-size: 17px; }
+
+  section { padding: clamp(28px, 5vw, 44px) 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: 0; }
+  .eyebrow { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin: 0 0 16px; }
+  h2 { font-family: var(--f-display); font-size: clamp(19px, 3vw, 25px); letter-spacing: -0.02em; font-weight: 700; margin: 0 0 18px; }
+
+  /* inputs */
+  .rows { border: 1px solid var(--rule); background: var(--surface); }
+  .row { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--rule); align-items: center; }
+  .row:last-child { border-bottom: 0; }
+  @media (min-width: 700px) { .row { grid-template-columns: 1fr 120px 150px 150px; gap: 16px; } }
+  .row .label { font-weight: 600; font-size: 15.5px; }
+  .row .label small { display: block; font-weight: 400; font-size: 13px; color: var(--faint); font-family: var(--f-body); }
+  .field { display: flex; align-items: center; gap: 7px; }
+  .field span { font-family: var(--f-mono); font-size: 11px; color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase; }
+  input[type="number"] {
+    width: 100%; background: var(--ground); color: var(--ink); border: 1px solid var(--rule-2);
+    padding: 8px 10px; font-family: var(--f-mono); font-size: 15px; font-variant-numeric: tabular-nums;
+    border-radius: 0; -moz-appearance: textfield;
+  }
+  input[type="number"]:focus { outline: 2px solid var(--vertice); outline-offset: -1px; border-color: var(--vertice); }
+  .row .sub-total { font-family: var(--f-mono); font-size: 15px; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+  @media (max-width: 699px) { .row .sub-total { text-align: left; } }
+
+  /* sliders */
+  .sliders { display: grid; gap: 22px; margin-top: 8px; }
+  @media (min-width: 700px) { .sliders { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  .slider label { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+  .slider label b { font-family: var(--f-mono); font-size: 16px; color: var(--vertice); font-variant-numeric: tabular-nums; }
+  input[type="range"] { width: 100%; accent-color: var(--vertice); }
+  .slider p { font-size: 13.5px; color: var(--faint); margin: 8px 0 0; line-height: 1.4; }
+
+  /* results */
+  .results { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 22px; }
+  @media (min-width: 720px) { .results { grid-template-columns: repeat(3, 1fr); } }
+  .res { background: var(--surface); padding: 22px 20px 24px; }
+  .res.hero { background: var(--sunken); }
+  .res .k { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; }
+  .res .n { font-family: var(--f-mono); font-weight: 600; font-size: clamp(24px, 4vw, 32px); letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .res.hero .n { color: var(--vertice); }
+  .res .foot { font-size: 13.5px; color: var(--muted); margin-top: 10px; line-height: 1.4; }
+
+  table { width: 100%; border-collapse: collapse; font-family: var(--f-mono); font-size: 14px; font-variant-numeric: tabular-nums; background: var(--surface); border: 1px solid var(--rule); }
+  th { text-align: left; font-family: var(--f-display); font-size: 10.5px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); padding: 12px 18px; border-bottom: 1px solid var(--rule); }
+  td { padding: 11px 18px; border-bottom: 1px solid var(--rule); color: var(--muted); }
+  td:last-child, th:last-child { text-align: right; }
+  td.item { color: var(--ink); }
+  tr:last-child td { border-bottom: 0; }
+  tr.sum td { background: var(--sunken); color: var(--ink); font-weight: 600; }
+
+  .alert { margin-top: 22px; padding: 18px 20px; border-left: 3px solid var(--flag); background: var(--flag-bg); font-size: 15px; line-height: 1.5; }
+  .alert.good { border-left-color: var(--ok); background: var(--ok-bg); }
+  .alert b { font-family: var(--f-display); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--flag); display: block; margin-bottom: 6px; }
+  .alert.good b { color: var(--ok); }
+
+  .cap { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  @media (min-width: 700px) { .cap { grid-template-columns: repeat(3, 1fr); } }
+  .cap div { background: var(--surface); padding: 18px 20px; }
+  .cap .k { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint); margin-bottom: 9px; }
+  .cap .n { font-family: var(--f-mono); font-weight: 600; font-size: 23px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+
+  details { margin-top: 20px; }
+  summary { font-family: var(--f-display); font-size: 13px; letter-spacing: 0.03em; color: var(--muted); cursor: pointer; padding: 10px 0; }
+  summary:hover { color: var(--ink); }
+
+  .reset { font-family: var(--f-display); font-size: 12.5px; letter-spacing: 0.04em; background: none; border: 1px solid var(--rule-2); color: var(--muted); padding: 8px 14px; cursor: pointer; margin-top: 18px; }
+  .reset:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer { padding: 36px 0 56px; border-top: 1px solid var(--rule); font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.02em; color: var(--faint); text-transform: uppercase; }
+</style>
+
+<header>
+  <div class="wrap">
+    <p class="marks"><span class="v">Vértice</span> <span class="x">×</span> <span class="m">Multiverso</span></p>
+    <h1>Cenários da Mesa</h1>
+    <p class="sub">Mexa nos números. Tudo recalcula na hora — inclusive quantas turmas isso vira e quantas horas por semana custa de cada sócio.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Mix de vendas</p>
+    <div class="rows" id="mix"></div>
+    <button class="reset" id="reset">Voltar ao cenário base</button>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Resultado do semestre</p>
+    <div class="results">
+      <div class="res">
+        <p class="k">Receita bruta</p>
+        <p class="n" id="r-receita"></p>
+        <p class="foot" id="r-receita-f"></p>
+      </div>
+      <div class="res">
+        <p class="k">Sobra depois dos custos</p>
+        <p class="n" id="r-sobra"></p>
+        <p class="foot" id="r-sobra-f"></p>
+      </div>
+      <div class="res hero">
+        <p class="k">A Vértice leva</p>
+        <p class="n" id="r-vertice"></p>
+        <p class="foot" id="r-vertice-f"></p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Custo de caixa</th><th>Semestre</th></tr></thead>
+      <tbody id="custos"></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Divisão entre as casas</p>
+    <h2>Quanto do resultado é da Vértice</h2>
+    <div class="sliders">
+      <div class="slider">
+        <label>Da originação, quanto é seu <b id="v-orig">100%</b></label>
+        <input type="range" id="s-orig" min="0" max="100" step="5" value="100">
+        <p>Quem trouxe o cliente. Vale 20% do bolo no modelo atual.</p>
+      </div>
+      <div class="slider">
+        <label>Da entrega, quanto é seu <b id="v-entr">30%</b></label>
+        <input type="range" id="s-entr" min="0" max="100" step="5" value="30">
+        <p>Quem põe as horas. Vale 50% do bolo — é o peso maior.</p>
+      </div>
+    </div>
+    <details>
+      <summary>Ajustar os pesos do modelo 20 / 50 / 30</summary>
+      <div class="rows" style="margin-top: 12px;" id="pesos"></div>
+    </details>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">O recurso escasso</p>
+    <h2>O que isso custa do seu tempo</h2>
+    <div class="cap">
+      <div><p class="k">Turmas da Mesa</p><p class="n" id="c-turmas"></p></div>
+      <div><p class="k">Horas de sócio no semestre</p><p class="n" id="c-horas"></p></div>
+      <div><p class="k">Por semana, cada sócio</p><p class="n" id="c-semana"></p></div>
+    </div>
+    <div class="alert" id="alerta"></div>
+    <details>
+      <summary>Ajustar premissas de custo e de carga</summary>
+      <div class="rows" style="margin-top: 12px;" id="premissas"></div>
+    </details>
+  </div>
+</section>
+
+<footer><div class="wrap">Documento de trabalho · Setembro de 2026</div></footer>
+
+<script>
+const BASE = {
+  mix: [
+    { id: "impl", nome: "Mesa + Implantação", nota: "nós colocamos no ar", qtd: 8,  preco: 72000 },
+    { id: "met",  nome: "Mesa + Método",      nota: "o time dele executa", qtd: 10, preco: 44000 },
+    { id: "mesa", nome: "Mesa pura",          nota: "só o acesso",         qtd: 15, preco: 20000 }
+  ],
+  pesos:     [ { id:"p_orig", nome:"Peso da originação", nota:"%", v:20 },
+               { id:"p_entr", nome:"Peso da entrega",    nota:"%", v:50 },
+               { id:"p_mesa", nome:"Peso da marca e presença na Mesa", nota:"% — dividido igual", v:30 } ],
+  premissas: [ { id:"h_dev",   nome:"Horas de dev por implantação",     nota:"h",       v:100 },
+               { id:"vl_hora", nome:"Valor da hora",                    nota:"R$",      v:150 },
+               { id:"infra",   nome:"Infra por contrato",               nota:"R$/mês",  v:250 },
+               { id:"ia",      nome:"IA e tokens por contrato",         nota:"R$/mês",  v:400 },
+               { id:"h_acomp", nome:"Acompanhamento por implantação",   nota:"h/mês",   v:4 },
+               { id:"h_rev",   nome:"Revisão por contrato de método",   nota:"h/quinzena", v:2 },
+               { id:"vagas",   nome:"Vagas por turma da Mesa",          nota:"pessoas", v:8 },
+               { id:"enc",     nome:"Encontros por turma no semestre",  nota:"encontros", v:6 },
+               { id:"c_enc",   nome:"Custo de produção por encontro",   nota:"R$",      v:3000 },
+               { id:"h_enc",   nome:"Horas de sócio por encontro",      nota:"h",       v:6 },
+               { id:"socios",  nome:"Sócios presentes na Mesa",         nota:"pessoas", v:2 } ],
+  orig: 100, entr: 30
+};
+
+const KEY = "mesa-cenarios-v1";
+let S = JSON.parse(JSON.stringify(BASE));
+
+try {
+  const saved = localStorage.getItem(KEY);
+  if (saved) {
+    const p = JSON.parse(saved);
+    if (p && p.mix && p.mix.length === 3) S = p;
+  }
+} catch (e) { /* sem storage, segue com o base */ }
+
+const brl = n => "R$ " + Math.round(n).toLocaleString("pt-BR");
+const el = id => document.getElementById(id);
+
+function numField(val, onChange, step) {
+  const i = document.createElement("input");
+  i.type = "number"; i.value = val; i.min = 0; i.step = step || 1;
+  i.addEventListener("input", () => { onChange(parseFloat(i.value) || 0); });
+  return i;
+}
+
+function buildMix() {
+  const box = el("mix"); box.textContent = "";
+  S.mix.forEach(p => {
+    const row = document.createElement("div"); row.className = "row";
+    const lab = document.createElement("div"); lab.className = "label";
+    lab.textContent = p.nome;
+    const small = document.createElement("small"); small.textContent = p.nota;
+    lab.appendChild(small);
+    const f1 = document.createElement("div"); f1.className = "field";
+    const s1 = document.createElement("span"); s1.textContent = "qtd";
+    f1.append(s1, numField(p.qtd, v => { p.qtd = v; render(); }));
+    const f2 = document.createElement("div"); f2.className = "field";
+    const s2 = document.createElement("span"); s2.textContent = "R$";
+    f2.append(s2, numField(p.preco, v => { p.preco = v; render(); }, 1000));
+    const st = document.createElement("div"); st.className = "sub-total"; st.id = "st-" + p.id;
+    row.append(lab, f1, f2, st); box.appendChild(row);
+  });
+}
+
+function buildSimple(listKey, containerId) {
+  const box = el(containerId); box.textContent = "";
+  S[listKey].forEach(p => {
+    const row = document.createElement("div"); row.className = "row";
+    row.style.gridTemplateColumns = "1fr 150px";
+    const lab = document.createElement("div"); lab.className = "label";
+    lab.textContent = p.nome;
+    const small = document.createElement("small"); small.textContent = p.nota;
+    lab.appendChild(small);
+    const f = document.createElement("div"); f.className = "field";
+    f.appendChild(numField(p.v, v => { p.v = v; render(); }, p.v >= 1000 ? 100 : 1));
+    row.append(lab, f); box.appendChild(row);
+  });
+}
+
+const get = (list, id) => (S[list].find(x => x.id === id) || { v: 0 }).v;
+
+function render() {
+  const [impl, met, mesa] = S.mix;
+  const receita = S.mix.reduce((a, p) => a + p.qtd * p.preco, 0);
+  S.mix.forEach(p => { const n = el("st-" + p.id); if (n) n.textContent = brl(p.qtd * p.preco); });
+
+  const hDev = get("premissas","h_dev"), vlHora = get("premissas","vl_hora");
+  const vagas = Math.max(1, get("premissas","vagas"));
+  const enc = get("premissas","enc"), cEnc = get("premissas","c_enc");
+  const hEnc = get("premissas","h_enc"), socios = Math.max(1, get("premissas","socios"));
+  const participantes = S.mix.reduce((a, p) => a + p.qtd, 0);
+  const turmas = Math.ceil(participantes / vagas) || 0;
+
+  const custos = [
+    ["Implantação (" + impl.qtd + " × " + hDev + "h)", impl.qtd * hDev * vlHora],
+    ["Infra", impl.qtd * get("premissas","infra") * 6],
+    ["IA e tokens", impl.qtd * get("premissas","ia") * 6],
+    ["Acompanhamento das implantações", impl.qtd * get("premissas","h_acomp") * 6 * vlHora],
+    ["Revisão quinzenal do método", met.qtd * get("premissas","h_rev") * 12 * vlHora],
+    ["Produção da Mesa (" + turmas + " turmas × " + enc + ")", turmas * enc * cEnc]
+  ];
+  const totalCusto = custos.reduce((a, c) => a + c[1], 0);
+  const sobra = receita - totalCusto;
+
+  const tb = el("custos"); tb.textContent = "";
+  custos.forEach(([nome, v]) => {
+    const tr = document.createElement("tr");
+    const td1 = document.createElement("td"); td1.className = "item"; td1.textContent = nome;
+    const td2 = document.createElement("td"); td2.textContent = brl(v);
+    tr.append(td1, td2); tb.appendChild(tr);
+  });
+  const trs = document.createElement("tr"); trs.className = "sum";
+  const t1 = document.createElement("td"); t1.className = "item"; t1.textContent = "Total";
+  const t2 = document.createElement("td"); t2.textContent = brl(totalCusto);
+  trs.append(t1, t2); tb.appendChild(trs);
+
+  const pO = get("pesos","p_orig") / 100, pE = get("pesos","p_entr") / 100, pM = get("pesos","p_mesa") / 100;
+  const fatia = pO * (S.orig / 100) + pE * (S.entr / 100) + pM * 0.5;
+  const daVertice = sobra * fatia;
+
+  el("r-receita").textContent = brl(receita);
+  el("r-receita-f").textContent = participantes + " contratos no semestre";
+  el("r-sobra").textContent = brl(sobra);
+  el("r-sobra-f").textContent = receita > 0 ? Math.round(sobra / receita * 100) + "% de margem" : "—";
+  el("r-vertice").textContent = brl(daVertice);
+  el("r-vertice-f").textContent = Math.round(fatia * 100) + "% do resultado · " + brl(daVertice / 6) + " por mês";
+
+  const hMesa = turmas * enc * hEnc;
+  const hAcomp = impl.qtd * get("premissas","h_acomp") * 6;
+  const hRev = met.qtd * get("premissas","h_rev") * 12;
+  const hTotal = hMesa + hAcomp + hRev;
+  const porSemana = hTotal / socios / 26;
+
+  el("c-turmas").textContent = turmas + (turmas === 1 ? " turma" : " turmas");
+  el("c-horas").textContent = Math.round(hTotal) + " h";
+  el("c-semana").textContent = porSemana.toFixed(1) + " h";
+
+  const a = el("alerta");
+  a.textContent = "";
+  const b = document.createElement("b");
+  if (porSemana > 10) {
+    a.className = "alert";
+    b.textContent = "Isso não cabe na sua semana";
+    a.appendChild(b);
+    a.appendChild(document.createTextNode(
+      "São " + turmas + " turmas e " + porSemana.toFixed(1) + " h por semana de cada sócio — mais de um encontro por semana. " +
+      "Antes de aceitar esse mix: tire as " + Math.round(hRev) + " h de revisão do método das suas costas (é trabalho de implantador), " +
+      "ou corte vagas e suba o preço. Escassez é o que sustenta a Mesa."
+    ));
+  } else if (porSemana > 6) {
+    a.className = "alert";
+    b.textContent = "No limite";
+    a.appendChild(b);
+    a.appendChild(document.createTextNode(
+      porSemana.toFixed(1) + " h por semana de cada sócio, em " + turmas + " turmas. Dá para sustentar, mas não sobra folga para férias sem alguém cobrindo a Mesa."
+    ));
+  } else {
+    a.className = "alert good";
+    b.textContent = "Cabe";
+    a.appendChild(b);
+    a.appendChild(document.createTextNode(
+      porSemana.toFixed(1) + " h por semana de cada sócio, em " + turmas + (turmas === 1 ? " turma" : " turmas") + ". Esse é um mix que você consegue entregar sem virar gargalo."
+    ));
+  }
+
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ok */ }
+}
+
+el("s-orig").addEventListener("input", e => { S.orig = +e.target.value; el("v-orig").textContent = S.orig + "%"; render(); });
+el("s-entr").addEventListener("input", e => { S.entr = +e.target.value; el("v-entr").textContent = S.entr + "%"; render(); });
+el("reset").addEventListener("click", () => {
+  S = JSON.parse(JSON.stringify(BASE));
+  el("s-orig").value = S.orig; el("v-orig").textContent = S.orig + "%";
+  el("s-entr").value = S.entr; el("v-entr").textContent = S.entr + "%";
+  buildMix(); buildSimple("pesos", "pesos"); buildSimple("premissas", "premissas"); render();
+});
+
+el("s-orig").value = S.orig; el("v-orig").textContent = S.orig + "%";
+el("s-entr").value = S.entr; el("v-entr").textContent = S.entr + "%";
+buildMix(); buildSimple("pesos", "pesos"); buildSimple("premissas", "premissas"); render();
+</script>

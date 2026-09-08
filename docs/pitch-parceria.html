@@ -1,0 +1,956 @@
+<title>Vértice × Multiverso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+  :root {
+    --ground:  #F4F6F8;
+    --surface: #FFFFFF;
+    --sunken:  #EAEEF2;
+    --ink:     #10161F;
+    --muted:   #59636F;
+    --faint:   #838D99;
+    --rule:    #DBE0E6;
+    --rule-2:  #BFC8D2;
+    --vertice: #1F6FEB;
+    --multi:   #7C4DD1;
+    --flag:    #A8420C;
+    --flag-bg: #FAEFE8;
+    --ok:      #14713F;
+
+    --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+    --measure: 68ch;
+    --pad: clamp(20px, 5vw, 44px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:  #0C1017;
+      --surface: #141A23;
+      --sunken:  #1B222C;
+      --ink:     #E9EDF2;
+      --muted:   #9EA9B5;
+      --faint:   #717C8A;
+      --rule:    #262E39;
+      --rule-2:  #3A4552;
+      --flag:    #F0864A;
+      --flag-bg: #241812;
+      --ok:      #4FBF85;
+      --vertice: #5B9BFF;
+      --multi:   #AE8CF0;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:  #0C1017;
+    --surface: #141A23;
+    --sunken:  #1B222C;
+    --ink:     #E9EDF2;
+    --muted:   #9EA9B5;
+    --faint:   #717C8A;
+    --rule:    #262E39;
+    --rule-2:  #3A4552;
+    --flag:    #F0864A;
+    --flag-bg: #241812;
+    --ok:      #4FBF85;
+    --vertice: #5B9BFF;
+    --multi:   #AE8CF0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad); }
+  .col  { max-width: var(--measure); }
+
+  h1, h2, h3, .eyebrow, .num, th, .btn {
+    font-family: var(--f-display);
+  }
+
+  /* ---------- hero ---------- */
+
+  .hero {
+    padding: clamp(56px, 11vw, 108px) 0 clamp(40px, 7vw, 64px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .marks {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(15px, 2.4vw, 18px);
+    letter-spacing: -0.01em;
+    margin-bottom: clamp(22px, 4vw, 34px);
+  }
+  .mark-v { color: var(--vertice); }
+  .mark-m { color: var(--multi); }
+  .cross {
+    color: var(--faint);
+    font-weight: 500;
+    font-family: var(--f-mono);
+    font-size: 0.86em;
+  }
+
+  h1 {
+    font-size: clamp(31px, 6.6vw, 60px);
+    line-height: 1.04;
+    letter-spacing: -0.032em;
+    font-weight: 700;
+    margin: 0 0 clamp(20px, 3.5vw, 30px);
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+  h1 .thin { color: var(--muted); font-weight: 500; }
+
+  .standfirst {
+    font-size: clamp(18px, 2.5vw, 21px);
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 54ch;
+    margin: 0;
+  }
+  .standfirst strong { color: var(--ink); font-weight: 600; }
+
+  .meta {
+    margin-top: clamp(28px, 5vw, 44px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--faint);
+    text-transform: uppercase;
+  }
+
+  /* ---------- sections ---------- */
+
+  section {
+    padding: clamp(46px, 8vw, 82px) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  section:last-of-type { border-bottom: 0; }
+
+  .eyebrow {
+    font-family: var(--f-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 14px;
+  }
+
+  h2 {
+    font-size: clamp(23px, 3.7vw, 34px);
+    line-height: 1.14;
+    letter-spacing: -0.024em;
+    font-weight: 700;
+    margin: 0 0 clamp(16px, 2.6vw, 24px);
+    text-wrap: balance;
+    max-width: 22ch;
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.008em;
+    margin: 0 0 8px;
+  }
+
+  p { margin: 0 0 18px; }
+  p:last-child { margin-bottom: 0; }
+
+  .lede { font-size: 18.5px; }
+
+  em.q {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  /* ---------- gargalo: fact rows ---------- */
+
+  .facts {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-top: clamp(24px, 4vw, 36px);
+  }
+  @media (min-width: 720px) { .facts { grid-template-columns: repeat(3, 1fr); } }
+
+  .fact {
+    background: var(--surface);
+    padding: 24px 22px 26px;
+  }
+  .fact .big {
+    font-family: var(--f-display);
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .fact p { font-size: 15.5px; line-height: 1.5; color: var(--muted); margin: 0; }
+
+  /* ---------- duas casas ---------- */
+
+  .houses {
+    display: grid;
+    gap: clamp(18px, 3vw, 26px);
+    margin-top: clamp(24px, 4vw, 36px);
+  }
+  @media (min-width: 760px) { .houses { grid-template-columns: 1fr 1fr; } }
+
+  .house {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 26px 24px 28px;
+    position: relative;
+  }
+  .house::before {
+    content: "";
+    position: absolute;
+    inset: -1px -1px auto -1px;
+    height: 3px;
+  }
+  .house-v::before { background: var(--vertice); }
+  .house-m::before { background: var(--multi); }
+
+  .house .who {
+    font-family: var(--f-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .house-v .who { color: var(--vertice); }
+  .house-m .who { color: var(--multi); }
+
+  .house ul { margin: 0; padding: 0; list-style: none; }
+  .house li {
+    font-size: 15.5px;
+    line-height: 1.5;
+    padding: 11px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .house li:first-child { border-top: 0; padding-top: 0; }
+  .house li strong { font-weight: 600; }
+
+  .join {
+    margin-top: clamp(22px, 3.5vw, 32px);
+    padding: 22px 24px;
+    border: 1px solid var(--rule-2);
+    background: var(--sunken);
+    font-size: 16.5px;
+  }
+  .join strong { font-weight: 600; }
+
+  /* ---------- oferta ---------- */
+
+  .tiers {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-top: clamp(26px, 4vw, 38px);
+  }
+  @media (min-width: 860px) { .tiers { grid-template-columns: repeat(3, 1fr); } }
+
+  .tier {
+    background: var(--surface);
+    padding: 26px 22px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .tier-hero { background: var(--sunken); }
+
+  .tier .name {
+    font-family: var(--f-display);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin-bottom: 4px;
+  }
+  .tier .for {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    min-height: 42px;
+  }
+  .price {
+    font-family: var(--f-mono);
+    font-weight: 600;
+    font-size: clamp(24px, 3.4vw, 30px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .tier-hero .price { color: var(--vertice); }
+  .per {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    color: var(--faint);
+    letter-spacing: 0.04em;
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+  .tier ul {
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .tier li {
+    padding: 9px 0 9px 20px;
+    border-top: 1px solid var(--rule);
+    position: relative;
+    color: var(--muted);
+  }
+  .tier li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 17px;
+    width: 7px;
+    height: 7px;
+    border: 1.5px solid var(--rule-2);
+  }
+  .tier li.on { color: var(--ink); }
+  .tier li.on::before { background: var(--ok); border-color: var(--ok); }
+
+  .alt-terms {
+    margin-top: clamp(18px, 3vw, 24px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .alt-terms b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- fórmula ---------- */
+
+  .formula {
+    margin-top: clamp(24px, 4vw, 34px);
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    overflow-x: auto;
+  }
+  .formula-head {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .formula-head .op { color: var(--faint); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--f-mono);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding: 13px 22px;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  td {
+    padding: 12px 22px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--muted);
+  }
+  td:last-child, th:last-child { text-align: right; }
+  td.item { color: var(--ink); }
+  tr:last-child td { border-bottom: 0; }
+  tr.sum td {
+    background: var(--sunken);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  tr.final td {
+    background: var(--sunken);
+    color: var(--vertice);
+    font-weight: 600;
+    border-top: 2px solid var(--rule-2);
+  }
+
+  .margin-note {
+    margin-top: 16px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  /* ---------- esteira ---------- */
+
+  .steps { margin-top: clamp(26px, 4vw, 38px); }
+  .step {
+    display: grid;
+    gap: 4px 20px;
+    padding: 18px 0;
+    border-top: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .step:last-child { border-bottom: 1px solid var(--rule); }
+  @media (min-width: 760px) {
+    .step { grid-template-columns: 44px 1fr 150px 1fr; }
+  }
+  .step .num {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    color: var(--faint);
+    font-weight: 500;
+  }
+  .step .what { font-weight: 600; font-size: 16px; }
+  .step .val {
+    font-family: var(--f-mono);
+    font-size: 14.5px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .step .proves { font-size: 15px; color: var(--muted); line-height: 1.45; }
+  .step-top .what, .step-top .val { color: var(--vertice); }
+
+  /* ---------- perfil ---------- */
+
+  .quote {
+    margin: clamp(24px, 4vw, 34px) 0 0;
+    padding: 0 0 0 20px;
+    border-left: 3px solid var(--multi);
+    font-size: clamp(18px, 2.6vw, 21px);
+    line-height: 1.45;
+    font-style: italic;
+    color: var(--ink);
+    max-width: 46ch;
+  }
+  .quote cite {
+    display: block;
+    margin-top: 12px;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-style: normal;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .split {
+    display: grid;
+    gap: clamp(18px, 3vw, 28px);
+    margin-top: clamp(24px, 4vw, 34px);
+  }
+  @media (min-width: 760px) { .split { grid-template-columns: 1fr 1fr; } }
+  .split > div {
+    border-top: 2px solid var(--rule-2);
+    padding-top: 16px;
+  }
+  .split p { font-size: 15.5px; color: var(--muted); line-height: 1.5; }
+
+  /* ---------- decisões ---------- */
+
+  .decisions { margin-top: clamp(26px, 4vw, 36px); }
+  .decision {
+    display: grid;
+    gap: 3px 18px;
+    padding: 20px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .decision:last-child { border-bottom: 1px solid var(--rule); }
+  @media (min-width: 720px) { .decision { grid-template-columns: 26px 1fr; } }
+  .box {
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid var(--rule-2);
+    margin-top: 5px;
+  }
+  .decision .q { font-weight: 600; font-size: 16.5px; margin-bottom: 5px; }
+  .decision .rec { font-size: 15.5px; color: var(--muted); line-height: 1.5; }
+  .decision .rec b {
+    color: var(--flag);
+    font-weight: 600;
+    font-family: var(--f-display);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-right: 7px;
+  }
+
+  /* ---------- caveat ---------- */
+
+  .caveat {
+    margin-top: clamp(30px, 5vw, 44px);
+    background: var(--flag-bg);
+    border-left: 3px solid var(--flag);
+    padding: 18px 22px;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .caveat b {
+    font-family: var(--f-display);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--flag);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  footer {
+    padding: clamp(40px, 6vw, 64px) 0 clamp(50px, 8vw, 80px);
+    border-top: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    color: var(--faint);
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero > .wrap > * { animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) backwards; }
+    .hero .marks { animation-delay: 0.02s; }
+    .hero h1 { animation-delay: 0.09s; }
+    .hero .standfirst { animation-delay: 0.16s; }
+    .hero .meta { animation-delay: 0.23s; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: none; }
+    }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="marks">
+      <span class="mark-v">Vértice</span>
+      <span class="cross">×</span>
+      <span class="mark-m">Multiverso</span>
+    </div>
+    <h1>Colocar a operação de pé <span class="thin">é o gargalo. E ninguém vende a saída.</span></h1>
+    <p class="standfirst">
+      Cada um de nós já resolveu isso de um lado — eu pela operação de performance,
+      vocês pelo software. <strong>Junto, isso deixa de ser competência interna e vira
+      produto.</strong> Esta é a proposta de como ele seria vendido, entregue e dividido.
+    </p>
+    <div class="meta">
+      <span>Rodrigo · Vértice</span>
+      <span>César e Luís · Multiverso</span>
+      <span>Conversa de trabalho</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">O problema</p>
+    <h2>As pessoas não travam na ideia. Travam na implantação.</h2>
+    <div class="col">
+      <p class="lede">
+        Todo mundo já entendeu que automatizar a operação é o caminho. O que ninguém entrega
+        é a parte chata: conectar o ERP, o WhatsApp, o Meta Ads, decidir quem recebe qual
+        alerta, e manter isso de pé depois que o entusiasmo passa.
+      </p>
+      <p>
+        Curso resolve entendimento, não implantação. Quem termina um curso e não sobe nada
+        continua exatamente onde estava — só que agora sabe o quanto está atrasado. É essa
+        pessoa que está quente para comprar a coisa mais cara que existir na prateleira.
+      </p>
+    </div>
+
+    <div class="facts">
+      <div class="fact">
+        <span class="big">3×</span>
+        <p>Se uma tarefa foi feita três vezes na mão, ela virou dívida. É a tese que já roda a Vértice.</p>
+      </div>
+      <div class="fact">
+        <span class="big">14</span>
+        <p>Contas auditadas todo dia por rotina, não por pessoa. A prova de que o modelo aguenta escala.</p>
+      </div>
+      <div class="fact">
+        <span class="big">0</span>
+        <p>Concorrentes vendendo <em class="q">método + implantação + mesa</em> no mesmo contrato. O espaço está aberto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">A complementaridade</p>
+    <h2>O que cada casa põe na mesa</h2>
+
+    <div class="houses">
+      <div class="house house-v">
+        <p class="who">Vértice</p>
+        <ul>
+          <li><strong>Operação de performance rodando como software.</strong> Agentes em Python contra as APIs de anúncio, 55 rotinas, credencial centralizada.</li>
+          <li><strong>A cicatriz.</strong> Cada rotina nasceu de um erro que custou dinheiro. Isso não se ensina em curso — se transfere.</li>
+          <li><strong>Relacionamento e atendimento.</strong> A conversa com o dono da empresa, que é onde o problema real aparece.</li>
+          <li><strong>Distribuição.</strong> Base de clientes e rede que já compra, já confia e já pediu isso.</li>
+        </ul>
+      </div>
+      <div class="house house-m">
+        <p class="who">Multiverso</p>
+        <ul>
+          <li><strong>Engenharia de produto.</strong> Software que se sustenta depois de entregue, não script que só o autor consegue rodar.</li>
+          <li><strong>Modelos mentais de arquitetura.</strong> O que vale código, o que vale IA, o que não vale construir.</li>
+          <li><strong>O perfil implantador.</strong> A pessoa que coloca no ar, valida com o time e some do caminho.</li>
+          <li><strong>Sistematização.</strong> Contratação, onboarding e processo já sendo automatizados de ponta a ponta na casa de vocês.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="join">
+      <strong>Onde as duas se encontram:</strong> a Vértice sabe o que precisa existir porque
+      apanha disso todo dia; a Multiverso sabe construir de um jeito que sobrevive.
+      O produto não é o software nem o curso — é a travessia entre saber e estar no ar.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">A oferta de topo</p>
+    <h2>A Mesa é o acesso. O que se vende é o acesso mais a travessia.</h2>
+    <div class="col">
+      <p>
+        A Mesa sozinha já tem preço: <strong>R$ 20 mil por pessoa, por semestre</strong>. Eu e o César
+        estamos sempre lá — é isso que está sendo comprado, e é por isso que ela nunca entra de graça
+        dentro de outro pacote. Ela é o piso da conta, não o brinde.
+      </p>
+      <p>
+        Em cima dela existem dois degraus: levar o método para o cliente executar com o time dele,
+        ou colocar no ar junto com ele.
+      </p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier">
+        <p class="name">Mesa</p>
+        <p class="for">Para quem já tem time técnico e quer o acesso e a leitura.</p>
+        <p class="price">R$ 20.000</p>
+        <p class="per">6 meses · por pessoa</p>
+        <ul>
+          <li class="on">Encontros presenciais com Rodrigo e César</li>
+          <li class="on">Rede de pares na mesma dor</li>
+          <li>Metodologia documentada</li>
+          <li>Implantação assistida</li>
+          <li>Integrações no ar</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <p class="name">Mesa + Método</p>
+        <p class="for">Para quem tem quem execute, mas não sabe o que mandar executar.</p>
+        <p class="price">R$ 38.000</p>
+        <p class="per">6 meses · por empresa</p>
+        <ul>
+          <li class="on">Tudo da Mesa</li>
+          <li class="on">Metodologia Vértice + Multiverso documentada</li>
+          <li class="on">Revisão quinzenal do que o time dele subiu</li>
+          <li>Implantação feita por nós</li>
+          <li>Infra por nossa conta</li>
+        </ul>
+      </div>
+      <div class="tier tier-hero">
+        <p class="name">Mesa + Implantação</p>
+        <p class="for">Para quem quer a coisa no ar e não quer montar time para isso.</p>
+        <p class="price">R$ 72.000</p>
+        <p class="per">6 meses · por empresa</p>
+        <ul>
+          <li class="on">Tudo acima</li>
+          <li class="on">Implantador dedicado colocando no ar</li>
+          <li class="on">Integrações entregues rodando (ERP, WhatsApp, Ads)</li>
+          <li class="on">Infra, monitoramento e plantão inclusos</li>
+          <li class="on">Grupos de relatório configurados</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alt-terms">
+      <span>Mesa avulsa mensal <b>R$ 4.200</b> — cara de propósito, existe para virar semestral</span>
+      <span>Mesa 12 meses <b>R$ 34.000</b></span>
+      <span>Implantação 12 meses <b>R$ 120.000</b></span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Precificação</p>
+    <h2>O preço não é chutado. Ele é montado na frente do cliente.</h2>
+    <div class="col">
+      <p>
+        Essa é a parte que costuma travar a venda de ticket alto: o cliente não sabe por que
+        custa isso. A saída é abrir a conta. Toda a estrutura do preço é defensável linha a linha,
+        e a margem aparece como margem — não escondida dentro de uma hora inflada.
+      </p>
+    </div>
+
+    <div class="formula">
+      <div class="formula-head">
+        piso <span class="op">=</span> mesa <span class="op">+</span> implantação
+        <span class="op">+</span> (infra <span class="op">+</span> IA <span class="op">+</span> acompanhamento)
+        <span class="op">×</span> meses
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Como se calcula</th>
+            <th>6 meses</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item">Mesa</td>
+            <td>preço de tabela, entra inteiro</td>
+            <td>R$ 20.000</td>
+          </tr>
+          <tr>
+            <td class="item">Implantação</td>
+            <td>~100 h-código × R$ 150</td>
+            <td>R$ 15.000</td>
+          </tr>
+          <tr>
+            <td class="item">Infra</td>
+            <td>Vercel, Supabase e GCP · R$ 250/mês</td>
+            <td>R$ 1.500</td>
+          </tr>
+          <tr>
+            <td class="item">IA</td>
+            <td>tokens em uso real · R$ 400/mês</td>
+            <td>R$ 2.400</td>
+          </tr>
+          <tr>
+            <td class="item">Acompanhamento</td>
+            <td>4 h/mês de sênior</td>
+            <td>R$ 3.600</td>
+          </tr>
+          <tr class="sum">
+            <td class="item">Piso</td>
+            <td>o que custa existir</td>
+            <td>R$ 42.500</td>
+          </tr>
+          <tr class="final">
+            <td class="item">Preço</td>
+            <td>piso × 1,7</td>
+            <td>R$ 72.000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <p class="margin-note">
+        <strong>O teto vem do outro lado.</strong> Se a implantação devolve 15 horas por semana
+        do fundador, são ~390 horas no semestre. A um custo de oportunidade conservador de
+        R$ 300/hora, o cliente recupera algo perto de R$ 116 mil. Vender a R$ 72 mil deixa a
+        conta favorável para ele e ainda assim com margem de 41% para nós. É esse número que
+        se apresenta na reunião de venda, não a tabela de horas.
+      </p>
+    </div>
+
+    <div class="caveat">
+      <b>Para travar amanhã</b>
+      Os R$ 20 mil da Mesa são seus, confirmados. Os outros valores — R$ 150 de hora-código,
+      R$ 250 de infra, R$ 400 de IA e o múltiplo de 1,7 — são hipóteses minhas para a conversa
+      ter números concretos. Se seus custos reais forem outros, a fórmula continua valendo e
+      só os preços finais se movem.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">A esteira</p>
+    <h2>Quem compra R$ 72 mil já comprou R$ 97 antes</h2>
+    <div class="col">
+      <p>
+        O produto de ticket alto não se vende no frio. Ele se vende para quem já atravessou a
+        esteira e chegou até nós se qualificando sozinho. Cada degrau existe para provar uma
+        coisa diferente — e o curso, que a maioria trata como destino, aqui é meio de funil.
+      </p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="num">01</span>
+        <span class="what">Diagnóstico automatizado</span>
+        <span class="val">grátis</span>
+        <span class="proves">Prova que a gente entende a operação dele melhor que ele mesmo</span>
+      </div>
+      <div class="step">
+        <span class="num">02</span>
+        <span class="what">Diagnóstico com leitura humana</span>
+        <span class="val">R$ 97</span>
+        <span class="proves">Separa curioso de quem tira o cartão do bolso</span>
+      </div>
+      <div class="step">
+        <span class="num">03</span>
+        <span class="what">Playbook das rotinas</span>
+        <span class="val">R$ 297</span>
+        <span class="proves">Mostra o tamanho real do trabalho — e assusta na medida certa</span>
+      </div>
+      <div class="step">
+        <span class="num">04</span>
+        <span class="what">Curso de metodologia</span>
+        <span class="val">R$ 1.997</span>
+        <span class="proves">Ensina o caminho e revela quem não vai conseguir andar sozinho</span>
+      </div>
+      <div class="step">
+        <span class="num">05</span>
+        <span class="what">Sprint de 30 dias</span>
+        <span class="val">R$ 8.000</span>
+        <span class="proves">Uma integração no ar. É a amostra grátis cara que fecha o topo</span>
+      </div>
+      <div class="step step-top">
+        <span class="num">06</span>
+        <span class="what">Mesa + Implantação</span>
+        <span class="val">R$ 72.000</span>
+        <span class="proves">A travessia inteira, com nós dois dentro</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Quem entrega</p>
+    <h2>O produto tem nome próprio, e o mercado já pediu por ele</h2>
+
+    <blockquote class="quote">
+      “Eu queria muito ter um Musso no meu time.”
+      <cite>João Vitor Pinheiro, sem que ninguém tivesse oferecido nada</cite>
+    </blockquote>
+
+    <div class="col" style="margin-top: 28px;">
+      <p>
+        Isso é validação de demanda antes de existir oferta. O que ele está pedindo não é um
+        desenvolvedor — é a pessoa que coloca coisa no ar, valida com o CEO e garante o
+        operacional sem precisar de gestão. Esse perfil é escasso, é caro de formar e é
+        exatamente o que nós dois já sabemos formar, cada um do nosso jeito.
+      </p>
+    </div>
+
+    <div class="split">
+      <div>
+        <h3>Como produto</h3>
+        <p>
+          Alocação de implantador, entre R$ 12 e 18 mil por mês, com nossa metodologia por trás
+          e nós dois como retaguarda técnica. Vende para quem não quer contratar, treinar e
+          torcer.
+        </p>
+      </div>
+      <div>
+        <h3>Como formação</h3>
+        <p>
+          A trilha que forma esse perfil vira o degrau mais caro da esteira educacional — e
+          alimenta o nosso próprio banco de implantadores. O aluno bom vira colega antes de
+          virar concorrente.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Amanhã</p>
+    <h2>Sete decisões. O resto é execução.</h2>
+
+    <div class="decisions">
+      <div class="decision">
+        <span class="box"></span>
+        <div>
+          <p class="q">O que é a Mesa, contratualmente?</p>
+          <p class="rec"><b>Proponho</b> encontros mensais presenciais, 8 vagas por turma, Rodrigo e César presentes em todos. Vaga é nominal e não se transfere — é o que sustenta os R$ 20 mil.</p>
+        </div>
+      </div>
+      <div class="decision">
+        <span class="box"></span>
+        <div>
+          <p class="q">Construímos software próprio agora?</p>
+          <p class="rec"><b>Proponho que não</b>. Software próprio cria obrigação de suporte e roadmap antes de existir demanda comprovada. Vendemos método e implantação sobre a stack do cliente; o produto emerge do que se repetir.</p>
+        </div>
+      </div>
+      <div class="decision">
+        <span class="box"></span>
+        <div>
+          <p class="q">Qual a primeira coisa que vira produto de verdade?</p>
+          <p class="rec"><b>Proponho</b> a interface de WhatsApp: voz e arquivo entram, viram atividade no Jira, saem como entrega. É o que mais se repete em todo cliente e o que menos existe pronto no mercado.</p>
+        </div>
+      </div>
+      <div class="decision">
+        <span class="box"></span>
+        <div>
+          <p class="q">Como se divide a receita?</p>
+          <p class="rec"><b>Proponho</b> 20% para quem originou, 50% para quem entregou as horas, 30% dividido igual pela marca e pela presença na Mesa. Simples o bastante para não precisar de auditoria.</p>
+        </div>
+      </div>
+      <div class="decision">
+        <span class="box"></span>
+        <div>
+          <p class="q">De quem é a metodologia?</p>
+          <p class="rec"><b>Proponho</b> marca conjunta, com cada casa livre para usar em cliente próprio. Sem exclusividade nesta primeira temporada — exclusividade se negocia depois de existir faturamento para proteger.</p>
+        </div>
+      </div>
+      <div class="decision">
+        <span class="box"></span>
+        <div>
+          <p class="q">Entram outras empresas na entrega?</p>
+          <p class="rec"><b>Proponho que não na v1</b>. Duas casas já é coordenação suficiente. Terceiros entram como fornecedor pontual, nunca como sócio de contrato.</p>
+        </div>
+      </div>
+      <div class="decision">
+        <span class="box"></span>
+        <div>
+          <p class="q">Qual o primeiro cliente-teste?</p>
+          <p class="rec"><b>Proponho</b> fechar um Sprint de 30 dias com alguém da base antes de anunciar qualquer coisa. Preço cheio, escopo pequeno, tudo cronometrado — é assim que a fórmula de preço vira número real em vez de hipótese.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="caveat">
+      <b>Uma observação de escopo</b>
+      Existe uma segunda conversa embaixo desta: reorganizar a Vértice por dentro — delegação
+      para o João e a Letícia, proteção de código, contexto acessível por permissão. Ela é o que
+      dá credibilidade a este pitch, mas não é pauta desta reunião. Está separada no documento
+      interno.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Documento de trabalho · Vértice × Multiverso · Setembro de 2026
+  </div>
+</footer>
