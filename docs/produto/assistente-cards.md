@@ -10,6 +10,10 @@ infraestrutura, não refinamento. Sem ele, o piloto funciona até o primeiro nú
 **Como ler a prioridade:** `P0` é caminho crítico — sem ele nada roda. `P1` entra assim que o P0
 da mesma fase fecha. `P2` é o que dá pra viver sem por algumas semanas, mas cobra juros depois.
 
+Card com link no número tem versão expandida em [`cards/`](./cards/), pronta pra colar no Jira —
+com passo a passo, critérios de aceite em checkbox e as armadilhas do caminho. Os demais moram
+só na linha da tabela até alguém pegar pra fazer.
+
 ---
 
 ## Fase 0 — Canal de pé
@@ -19,7 +23,7 @@ certo, sem ninguém apertar nada.
 
 | # | Card | Entrega | Pronto quando | Depende de |
 |---|---|---|---|---|
-| **A1** | Provisionar os três números | Ouvido, boca e reserva ativos na Z-API, com o ouvido como admin do grupo piloto | Os três respondem a um teste de conexão e o ouvido consegue adicionar/remover participante | — |
+| **[A1](./cards/A1-provisionar-numeros.md)** | Provisionar os três números | Ouvido, boca e reserva ativos na Z-API, com o ouvido como admin do grupo piloto | Os três respondem a um teste de conexão e o ouvido consegue adicionar/remover participante | — |
 | **A2** | Webhook de entrada | O ouvido recebe evento de mensagem de grupo e normaliza pra um formato interno | Mensagem enviada no grupo piloto aparece na fila interna em < 5s | A1 |
 | **A3** | Registro de grupos | Mapa `grupo ↔ cliente ↔ config`, com o bloco `atendimento` no `config.json` | Um grupo desconhecido é rejeitado com log claro, nunca respondido | A2 |
 | **A4** | Envio pela boca | Envio de texto assinado pelo número marcado como ativo | Mensagem chega no grupo com a assinatura do §7; o reserva **não** consegue enviar | A1, A3 |
